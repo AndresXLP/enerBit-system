@@ -2,6 +2,8 @@ package providers
 
 import (
 	"enerBit-system/internal/infra/api/router"
+	"enerBit-system/internal/infra/resource/postgres"
+	"enerBit-system/internal/infra/resource/redis"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/dig"
 )
@@ -14,6 +16,10 @@ func BuildContainer() *dig.Container {
 	_ = Container.Provide(func() *echo.Echo {
 		return echo.New()
 	})
+
+	_ = Container.Provide(redis.NewRedisConnection)
+
+	_ = Container.Provide(postgres.NewConnection)
 
 	_ = Container.Provide(router.New)
 
