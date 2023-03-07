@@ -10,11 +10,13 @@ import (
 )
 
 type Meter struct {
-	ID        uuid.UUID
-	Brand     string
-	Serial    string
-	Lines     int
-	CreatedAt time.Time
+	ID               uuid.UUID
+	Brand            string
+	Serial           string
+	Lines            int
+	InUse            bool
+	LastInstallation time.Time
+	CreatedAt        time.Time
 }
 
 func (m *Meter) BuildModel(meter dto.Meter) {
@@ -31,3 +33,18 @@ func (m *Meter) GenerateMessageCreatedMeter() string {
 	)
 }
 
+type NewInstallation struct {
+	Meter
+	Client
+}
+
+func (m *NewInstallation) GenerateMessageInstallation() string {
+	return fmt.Sprintf(enums.NewInstallation,
+		m.MeterID,
+		m.Address,
+		m.InstallationDate.Day(),
+		m.InstallationDate.Month().String(),
+		m.InstallationDate.Year(),
+		m.IsActive,
+	)
+}

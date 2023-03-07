@@ -53,3 +53,46 @@ func (repo meter) GetMeterByBrandAndSerial(ctx context.Context, brand, serial st
 
 	return meterDB, nil
 }
+
+func (repo meter) GetInstallationByAddress(ctx context.Context, address string) (model.Client, error) {
+	clientDB := model.Client{}
+	err := repo.db.WithContext(ctx).
+		Table(tableClients).
+		Where("address = ?", address).
+		Order("installation_date DESC").
+		Scan(&clientDB).
+		Error
+	if err != nil {
+		return model.Client{}, err
+	}
+
+	return clientDB, nil
+}
+
+func (repo meter) NewInstallation(ctx context.Context, installation model.NewInstallation) error {
+	err := repo.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).
+			Table(tableClients).
+			Create(&installation.Client).
+			Error; err != nil {
+			return err
+		}
+
+		installation.Meter.InUse = true
+
+		if err := tx.WithContext(ctx).
+			Table(tableMeters).
+			Updates(installation.Meter).
+			Error; err != nil {
+		}
+
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	go repo.redisLogs.SendStreamLog(installation.GenerateMessageInstallation())
+
+	return nil
+}

@@ -29,10 +29,13 @@ func BuildContainer() *dig.Container {
 	_ = Container.Provide(router.New)
 
 	_ = Container.Provide(groups.NewMeterGroup)
+	_ = Container.Provide(groups.NewClientGroup)
 
 	_ = Container.Provide(handler.NewMeterHandler)
+	_ = Container.Provide(handler.NewClientHandler)
 
 	_ = Container.Provide(app.NewMeterApp)
+	_ = Container.Provide(app.NewClientApp)
 
 	_ = Container.Provide(pgRepo.NewMeterRepository)
 
