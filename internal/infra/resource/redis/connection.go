@@ -28,6 +28,8 @@ func NewRedisConnection() redis.Conn {
 		panic(err)
 	}
 
+	connection.Do("XGROUP", "CREATE", "mystream", "mygroup", "$", "MKSTREAM")
+
 	log.Info("Redis Stream Connection Successfully")
 	return connection
 }
