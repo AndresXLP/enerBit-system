@@ -20,4 +20,5 @@ func NewClientGroup(meterHand handler.Client) Client {
 func (group client) Resource(c *echo.Group) {
 	groupPath := c.Group("/client")
 	groupPath.POST("", group.meterHandler.NewInstallation)
+	groupPath.DELETE("", group.meterHandler.UninstallMeter)
 }

@@ -11,4 +11,5 @@ type Repository interface {
 	GetMeterByBrandAndSerial(ctx context.Context, brand, serial string) (model.Meter, error)
 	GetInstallationByAddress(ctx context.Context, address string) (model.Client, error)
 	NewInstallation(ctx context.Context, installation model.NewInstallation) error
+	UninstallMeter(ctx context.Context, property model.Client) error
 }

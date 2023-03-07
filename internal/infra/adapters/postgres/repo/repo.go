@@ -75,6 +75,7 @@ func (repo meter) NewInstallation(ctx context.Context, installation model.NewIns
 			Table(tableClients).
 			Create(&installation.Client).
 			Error; err != nil {
+			tx.Rollback()
 			return err
 		}
 
@@ -84,6 +85,8 @@ func (repo meter) NewInstallation(ctx context.Context, installation model.NewIns
 			Table(tableMeters).
 			Updates(installation.Meter).
 			Error; err != nil {
+			tx.Rollback()
+			return err
 		}
 
 		return nil
@@ -93,6 +96,35 @@ func (repo meter) NewInstallation(ctx context.Context, installation model.NewIns
 	}
 
 	go repo.redisLogs.SendStreamLog(installation.GenerateMessageInstallation())
+
+	return nil
+}
+
+func (repo meter) UninstallMeter(ctx context.Context, property model.Client) error {
+	err := repo.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.WithContext(ctx).
+			Table(tableClients).
+			Omit("installation_date", "meter_id", "address", "id").
+			Updates(property).
+			Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		if err := tx.WithContext(ctx).
+			Table(tableMeters).
+			Where("id = ?", property.MeterID).
+			Update("in_use", false).
+			Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

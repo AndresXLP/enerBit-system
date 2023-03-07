@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"enerBit-system/internal/domain/dto"
@@ -13,6 +14,7 @@ import (
 type Client interface {
 	NewInstallation(ctx context.Context, request dto.NewInstallation) error
 	GetInstallationByAddress(ctx context.Context, address string) (model.Client, error)
+	UninstallMeter(ctx context.Context, request dto.UninstallMeter) error
 }
 
 type client struct {
@@ -81,4 +83,32 @@ func (app *client) GetInstallationByAddress(ctx context.Context, address string)
 	}
 
 	return clientDB, nil
+}
+
+func (app *client) UninstallMeter(ctx context.Context, request dto.UninstallMeter) error {
+	property, err := app.GetInstallationByAddress(ctx, request.Address)
+	if err != nil {
+		return err
+	}
+
+	if property.ID == 0 {
+		return echo.NewHTTPError(http.StatusNotFound, "this property does not exist")
+	}
+
+	if property.RetirementDate != nil {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Sprintf("the meter of this property was already uninstalled on %v", *property.RetirementDate))
+	}
+
+	if property.InstallationDate.After(request.RetirementDate) {
+		return echo.NewHTTPError(http.StatusConflict, "the retirement date cannot be early than the installation date")
+	}
+
+	property.RetirementDate = &request.RetirementDate
+	property.IsActive = false
+
+	if err = app.repo.UninstallMeter(ctx, property); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return nil
 }
