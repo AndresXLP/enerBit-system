@@ -10,6 +10,7 @@ import (
 
 type Client interface {
 	NewInstallation(cntx echo.Context) error
+	UninstallMeter(cntx echo.Context) error
 }
 
 type client struct {
@@ -36,4 +37,22 @@ func (handler *client) NewInstallation(cntx echo.Context) error {
 	}
 
 	return cntx.JSON(http.StatusOK, request)
+}
+
+func (handler *client) UninstallMeter(cntx echo.Context) error {
+	ctx := cntx.Request().Context()
+
+	request := dto.UninstallMeter{}
+	if err := cntx.Bind(&request); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := request.Validate(); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := handler.app.UninstallMeter(ctx, request); err != nil {
+		return err
+	}
+	return cntx.JSON(http.StatusOK, "Meter uninstalled successfully")
 }

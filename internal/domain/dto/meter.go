@@ -2,6 +2,7 @@ package dto
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-playground/mold/v4/modifiers"
 	"github.com/go-playground/validator/v10"
@@ -32,4 +33,15 @@ func (n *NewInstallation) Validate() error {
 	_ = conform.Struct(context.Background(), n)
 
 	return validate.Struct(n)
+}
+
+type UninstallMeter struct {
+	Address        string    `json:"address" mod:"ucase" validate:"required"`
+	RetirementDate time.Time `json:"retirement_date" validate:"required"`
+}
+
+func (u *UninstallMeter) Validate() error {
+	_ = conform.Struct(context.Background(), u)
+
+	return validate.Struct(u)
 }
