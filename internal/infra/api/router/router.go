@@ -8,14 +8,16 @@ import (
 )
 
 type Router struct {
-	server     *echo.Echo
-	meterGroup groups.Meter
+	server      *echo.Echo
+	meterGroup  groups.Meter
+	clientGroup groups.Client
 }
 
-func New(server *echo.Echo, meterGroup groups.Meter) *Router {
+func New(server *echo.Echo, meterGroup groups.Meter, clientGroup groups.Client) *Router {
 	return &Router{
 		server,
 		meterGroup,
+		clientGroup,
 	}
 }
 
@@ -24,4 +26,5 @@ func (r *Router) Init() {
 	basePath.GET("/health", handler.HealthCheck)
 
 	r.meterGroup.Resource(basePath)
+	r.clientGroup.Resource(basePath)
 }

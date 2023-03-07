@@ -16,7 +16,7 @@ type Meter interface {
 }
 
 type meter struct {
-	meterRepo repo.Repository
+	repo repo.Repository
 }
 
 func NewMeterApp(meterRepo repo.Repository) Meter {
@@ -27,12 +27,16 @@ func (app *meter) RegisterNewMeter(ctx context.Context, request dto.Meter) error
 	reqModel := model.Meter{}
 	reqModel.BuildModel(request)
 
-	_, err := app.GetMeterByBrandAndSerial(ctx, request.Brand, request.Serial)
+	meterDB, err := app.GetMeterByBrandAndSerial(ctx, request.Brand, request.Serial)
 	if err != nil {
 		return err
 	}
 
-	if err := app.meterRepo.RegisterNewMeter(ctx, reqModel); err != nil {
+	if meterDB.ID.ID() != 0 {
+		return echo.NewHTTPError(http.StatusConflict, "this meter brand and serial already exist")
+	}
+
+	if err := app.repo.RegisterNewMeter(ctx, reqModel); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
@@ -40,13 +44,9 @@ func (app *meter) RegisterNewMeter(ctx context.Context, request dto.Meter) error
 }
 
 func (app *meter) GetMeterByBrandAndSerial(ctx context.Context, brand, serial string) (model.Meter, error) {
-	existingMeter, err := app.meterRepo.GetMeterByBrandAndSerial(ctx, brand, serial)
+	existingMeter, err := app.repo.GetMeterByBrandAndSerial(ctx, brand, serial)
 	if err != nil {
 		return model.Meter{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	if existingMeter.ID.ID() != 0 {
-		return model.Meter{}, echo.NewHTTPError(http.StatusConflict, "this meter brand and serial already exist")
 	}
 
 	return existingMeter, nil

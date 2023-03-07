@@ -2,7 +2,6 @@ package dto
 
 import (
 	"context"
-	"time"
 
 	"github.com/go-playground/mold/v4/modifiers"
 	"github.com/go-playground/validator/v10"
@@ -22,4 +21,15 @@ type Meter struct {
 func (m *Meter) Validate() error {
 	_ = conform.Struct(context.Background(), m)
 	return validate.Struct(m)
+}
+
+type NewInstallation struct {
+	Meter
+	Client
+}
+
+func (n *NewInstallation) Validate() error {
+	_ = conform.Struct(context.Background(), n)
+
+	return validate.Struct(n)
 }
