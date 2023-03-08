@@ -37,7 +37,7 @@ func (n *NewInstallation) Validate() error {
 
 type UninstallMeter struct {
 	Address        string    `json:"address" mod:"ucase" validate:"required"`
-	RetirementDate time.Time `json:"retirement_date" validate:"required"`
+	RetirementDate time.Time `json:"retirement_date" validate:"required" example:"2023-03-10T00:00:00Z"`
 }
 
 func (u *UninstallMeter) Validate() error {
@@ -48,7 +48,7 @@ func (u *UninstallMeter) Validate() error {
 
 type ClientMeter struct {
 	Address          string    `json:"address"`
-	InstallationDate time.Time `json:"installation_date"`
+	InstallationDate time.Time `json:"installation_date" example:"2023-03-10T00:00:00Z"`
 	Brand            string    `json:"brand"`
 	Serial           string    `json:"serial"`
 	IsActive         bool      `json:"is_active"`
@@ -61,8 +61,8 @@ func (m *MeterWithoutService) Add(clientMeter ClientMeter) {
 }
 
 type LastInstallation struct {
-	Brand  string `json:"brand" mod:"ucase" validate:"required"`
-	Serial string `json:"serial" mod:"ucase" validate:"required"`
+	Brand  string `query:"brand" mod:"ucase" validate:"required"`
+	Serial string `query:"serial" mod:"ucase" validate:"required"`
 }
 
 func (l *LastInstallation) Validate() error {
