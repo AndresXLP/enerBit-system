@@ -16,4 +16,5 @@ type Repository interface {
 	GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error)
 	DeleteMeterByID(ctx context.Context, ID uuid.UUID) error
 	GetInactiveServiceMeters(ctx context.Context) (model.ClientWithoutService, error)
+	GetLastInstallation(ctx context.Context, meter model.Meter) (model.Client, error)
 }

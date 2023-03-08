@@ -22,4 +22,5 @@ func (group meter) Resource(c *echo.Group) {
 	groupPath.POST("", group.meterHandler.RegisterNewMeter)
 	groupPath.DELETE("/:id", group.meterHandler.DeleteMeter)
 	groupPath.GET("/inactive", group.meterHandler.GetInactiveServiceMeters)
+	groupPath.GET("/last-installation", group.meterHandler.GetLastInstallation)
 }
