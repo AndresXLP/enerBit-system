@@ -21,6 +21,15 @@ func NewClientHandler(app app.Client) Client {
 	return &client{app}
 }
 
+// @Tags			Installation
+// @Summary		Installation meter in property
+// @Description	Install meter in property
+// @Produce		json
+// @Param			request	body		dto.NewInstallation	true	"Request Body"
+// @Success		200		{object}	dto.NewInstallation
+// @Failure		400
+// @Failure		404
+// @Router			/client [post]
 func (handler *client) NewInstallation(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 	request := dto.NewInstallation{}
@@ -39,6 +48,15 @@ func (handler *client) NewInstallation(cntx echo.Context) error {
 	return cntx.JSON(http.StatusOK, request)
 }
 
+// @Tags			Installation
+// @Summary		Uninstall meter in property
+// @Description	Uninstall meter in property
+// @Produce		json
+// @Param			request	body		dto.UninstallMeter	true	"Request Body"
+// @Success		200		{object}	string
+// @Failure		400
+// @Failure		404
+// @Router			/client [delete]
 func (handler *client) UninstallMeter(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 

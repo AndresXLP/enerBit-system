@@ -15,6 +15,14 @@ var (
 	serverPort = config.Environments().ServerPort
 )
 
+// main
+//
+//	@title			Ener Bit System
+//	@version		1.0.0
+//	@description	Register and monitor the energy meters that have been installed in our clients' properties
+//	@license.name	Andres Puello
+//	@BasePath		/api
+//	@schemes		http
 func main() {
 	container := providers.BuildContainer()
 

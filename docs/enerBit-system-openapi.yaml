@@ -1,0 +1,250 @@
+basePath: /api
+definitions:
+  dto.Client:
+    properties:
+      address:
+        type: string
+      installation_date:
+        example: "2023-03-10T00:00:00Z"
+        type: string
+      is_active:
+        type: boolean
+    required:
+    - address
+    - installation_date
+    type: object
+  dto.ClientMeter:
+    properties:
+      address:
+        type: string
+      brand:
+        type: string
+      installation_date:
+        example: "2023-03-10T00:00:00Z"
+        type: string
+      is_active:
+        type: boolean
+      serial:
+        type: string
+    type: object
+  dto.Meter:
+    properties:
+      brand:
+        type: string
+      lines:
+        maximum: 10
+        minimum: 1
+        type: integer
+      serial:
+        type: string
+    required:
+    - brand
+    - serial
+    type: object
+  dto.NewInstallation:
+    properties:
+      address:
+        type: string
+      brand:
+        type: string
+      installation_date:
+        example: "2023-03-10T00:00:00Z"
+        type: string
+      is_active:
+        type: boolean
+      lines:
+        maximum: 10
+        minimum: 1
+        type: integer
+      serial:
+        type: string
+    required:
+    - address
+    - brand
+    - installation_date
+    - serial
+    type: object
+  dto.UninstallMeter:
+    properties:
+      address:
+        type: string
+      retirement_date:
+        example: "2023-03-10T00:00:00Z"
+        type: string
+    required:
+    - address
+    - retirement_date
+    type: object
+  handler.Health:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: Register and monitor the energy meters that have been installed in
+    our clients' properties
+  license:
+    name: Andres Puello
+  title: Ener Bit System
+  version: 1.0.0
+paths:
+  /client:
+    delete:
+      description: Uninstall meter in property
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UninstallMeter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Uninstall meter in property
+      tags:
+      - Installation
+    post:
+      description: Install meter in property
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewInstallation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewInstallation'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Installation meter in property
+      tags:
+      - Installation
+  /health:
+    get:
+      description: health service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Health'
+      summary: Check if service is active
+      tags:
+      - Health
+  /meter:
+    post:
+      description: Register New Meter
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Meter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Meter'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Register New Meter
+      tags:
+      - Meter
+  /meter/{id}:
+    delete:
+      description: Delete a Meter
+      parameters:
+      - description: meter_id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Meter Delete Successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Delete a Meter
+      tags:
+      - Meter
+  /meter/inactive:
+    get:
+      description: Get Inactive service Meter
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ClientMeter'
+            type: array
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get Inactive service Meter
+      tags:
+      - Meter
+  /meter/last-installation:
+    get:
+      description: Get Last Installation Meter
+      parameters:
+      - description: brand meter
+        in: query
+        name: brand
+        required: true
+        type: string
+      - description: serial meter
+        in: query
+        name: serial
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Client'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get Last Installation Meter
+      tags:
+      - Meter
+schemes:
+- http
+swagger: "2.0"

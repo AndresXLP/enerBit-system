@@ -26,6 +26,15 @@ func NewMeterHandler(app app.Meter) Meter {
 	}
 }
 
+// @Tags			Meter
+// @Summary		Register New Meter
+// @Description	Register New Meter
+// @Produce		json
+// @Param			request	body		dto.Meter	true	"Request Body"
+// @Success		200		{object}	dto.Meter
+// @Failure		400
+// @Failure		404
+// @Router			/meter [post]
 func (handler *meter) RegisterNewMeter(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 	request := dto.Meter{}
@@ -44,6 +53,15 @@ func (handler *meter) RegisterNewMeter(cntx echo.Context) error {
 	return cntx.JSON(http.StatusOK, request)
 }
 
+// @Tags			Meter
+// @Summary		Delete a Meter
+// @Description	Delete a Meter
+// @Produce		json
+// @Param			id	path		string	true	"meter_id"
+// @Success		200	{object}	string	"Meter Delete Successfully"
+// @Failure		400
+// @Failure		404
+// @Router			/meter/{id} [delete]
 func (handler *meter) DeleteMeter(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 	id := cntx.Param("id")
@@ -61,6 +79,14 @@ func (handler *meter) DeleteMeter(cntx echo.Context) error {
 	return cntx.JSON(http.StatusOK, "Meter Deleted Successfully")
 }
 
+// @Tags			Meter
+// @Summary		Get Inactive service Meter
+// @Description	Get Inactive service Meter
+// @Produce		json
+// @Success		200	{object}	dto.MeterWithoutService
+// @Failure		400
+// @Failure		404
+// @Router			/meter/inactive [get]
 func (handler *meter) GetInactiveServiceMeters(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 	clientMeters, err := handler.app.GetInactiveServiceMeters(ctx)
@@ -71,6 +97,16 @@ func (handler *meter) GetInactiveServiceMeters(cntx echo.Context) error {
 	return cntx.JSON(http.StatusOK, clientMeters)
 }
 
+// @Tags			Meter
+// @Summary		Get Last Installation Meter
+// @Description	Get Last Installation Meter
+// @Produce		json
+// @Param			brand	query		string	true	"brand meter"
+// @Param			serial	query		string	true	"serial meter"
+// @Success		200		{object}	dto.Client
+// @Failure		400
+// @Failure		404
+// @Router			/meter/last-installation [get]
 func (handler *meter) GetLastInstallation(cntx echo.Context) error {
 	ctx := cntx.Request().Context()
 
