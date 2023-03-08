@@ -1,0 +1,3 @@
+TRUNCATE public.meters RESTART IDENTITY;
+
+DROP TABLE IF EXISTS public.meters;
