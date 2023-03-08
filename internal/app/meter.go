@@ -106,6 +106,10 @@ func (app *meter) GetLastInstallation(ctx context.Context, request dto.LastInsta
 		return dto.Client{}, echo.NewHTTPError(http.StatusBadRequest, "this meter does not exist")
 	}
 
+	if meterDB.LastInstallation.IsZero() {
+		return dto.Client{}, echo.NewHTTPError(http.StatusNotFound, "this meter has never been installed")
+	}
+
 	lastClient, err := app.repo.GetLastInstallation(ctx, meterDB)
 	if err != nil {
 		return dto.Client{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())

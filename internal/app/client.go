@@ -58,7 +58,7 @@ func (app *client) NewInstallation(ctx context.Context, request dto.NewInstallat
 		Meter: model.Meter{
 			ID:               meterDB.ID,
 			InUse:            meterDB.InUse,
-			LastInstallation: request.InstallationDate,
+			LastInstallation: &request.InstallationDate,
 		},
 		Client: model.Client{
 			Address:          request.Address,
