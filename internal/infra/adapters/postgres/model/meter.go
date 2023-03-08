@@ -15,7 +15,7 @@ type Meter struct {
 	Serial           string
 	Lines            int
 	InUse            bool
-	LastInstallation time.Time
+	LastInstallation *time.Time
 	CreatedAt        time.Time
 }
 
