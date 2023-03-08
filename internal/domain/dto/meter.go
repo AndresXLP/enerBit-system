@@ -59,3 +59,14 @@ type MeterWithoutService []ClientMeter
 func (m *MeterWithoutService) Add(clientMeter ClientMeter) {
 	*m = append(*m, clientMeter)
 }
+
+type LastInstallation struct {
+	Brand  string `json:"brand" mod:"ucase" validate:"required"`
+	Serial string `json:"serial" mod:"ucase" validate:"required"`
+}
+
+func (l *LastInstallation) Validate() error {
+	_ = conform.Struct(context.Background(), l)
+
+	return validate.Struct(l)
+}

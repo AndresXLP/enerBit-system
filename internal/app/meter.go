@@ -17,6 +17,7 @@ type Meter interface {
 	GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error)
 	DeleterMeter(ctx context.Context, ID uuid.UUID) error
 	GetInactiveServiceMeters(ctx context.Context) (dto.MeterWithoutService, error)
+	GetLastInstallation(ctx context.Context, request dto.LastInstallation) (dto.Client, error)
 }
 
 type meter struct {
@@ -93,4 +94,22 @@ func (app *meter) GetInactiveServiceMeters(ctx context.Context) (dto.MeterWithou
 	}
 
 	return clientMeter.ToDomainDTOSlice(), nil
+}
+
+func (app *meter) GetLastInstallation(ctx context.Context, request dto.LastInstallation) (dto.Client, error) {
+	meterDB, err := app.GetMeterByBrandAndSerial(ctx, request.Brand, request.Serial)
+	if err != nil {
+		return dto.Client{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	if meterDB.ID.ID() == 0 {
+		return dto.Client{}, echo.NewHTTPError(http.StatusBadRequest, "this meter does not exist")
+	}
+
+	lastClient, err := app.repo.GetLastInstallation(ctx, meterDB)
+	if err != nil {
+		return dto.Client{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return lastClient.ToDomainDTOSingle(), nil
 }

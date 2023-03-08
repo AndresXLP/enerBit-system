@@ -13,6 +13,7 @@ type Meter interface {
 	RegisterNewMeter(cntx echo.Context) error
 	DeleteMeter(cntx echo.Context) error
 	GetInactiveServiceMeters(cntx echo.Context) error
+	GetLastInstallation(cntx echo.Context) error
 }
 
 type meter struct {
@@ -68,4 +69,24 @@ func (handler *meter) GetInactiveServiceMeters(cntx echo.Context) error {
 	}
 
 	return cntx.JSON(http.StatusOK, clientMeters)
+}
+
+func (handler *meter) GetLastInstallation(cntx echo.Context) error {
+	ctx := cntx.Request().Context()
+
+	request := dto.LastInstallation{}
+	if err := cntx.Bind(&request); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := request.Validate(); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	lastInstallation, err := handler.app.GetLastInstallation(ctx, request)
+	if err != nil {
+		return err
+	}
+
+	return cntx.JSON(http.StatusOK, lastInstallation)
 }

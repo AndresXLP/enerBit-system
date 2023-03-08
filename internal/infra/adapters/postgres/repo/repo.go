@@ -169,3 +169,15 @@ func (repo meter) GetInactiveServiceMeters(ctx context.Context) (model.ClientWit
 
 	return clientMeter, nil
 }
+
+func (repo meter) GetLastInstallation(ctx context.Context, meter model.Meter) (model.Client, error) {
+	lastInstallation := model.Client{}
+	err := repo.db.WithContext(ctx).Table(tableClients).
+		Where("meter_id = ? AND installation_date = ?", meter.ID, meter.LastInstallation).
+		Scan(&lastInstallation).Error
+	if err != nil {
+		return model.Client{}, err
+	}
+
+	return lastInstallation, nil
+}
