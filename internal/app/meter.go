@@ -16,6 +16,7 @@ type Meter interface {
 	GetMeterByBrandAndSerial(ctx context.Context, brand, serial string) (model.Meter, error)
 	GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error)
 	DeleterMeter(ctx context.Context, ID uuid.UUID) error
+	GetInactiveServiceMeters(ctx context.Context) (dto.MeterWithoutService, error)
 }
 
 type meter struct {
@@ -83,4 +84,13 @@ func (app *meter) DeleterMeter(ctx context.Context, ID uuid.UUID) error {
 	}
 
 	return nil
+}
+
+func (app *meter) GetInactiveServiceMeters(ctx context.Context) (dto.MeterWithoutService, error) {
+	clientMeter, err := app.repo.GetInactiveServiceMeters(ctx)
+	if err != nil {
+		return dto.MeterWithoutService{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return clientMeter.ToDomainDTOSlice(), nil
 }

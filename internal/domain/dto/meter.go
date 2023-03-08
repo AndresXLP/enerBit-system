@@ -45,3 +45,17 @@ func (u *UninstallMeter) Validate() error {
 
 	return validate.Struct(u)
 }
+
+type ClientMeter struct {
+	Address          string    `json:"address"`
+	InstallationDate time.Time `json:"installation_date"`
+	Brand            string    `json:"brand"`
+	Serial           string    `json:"serial"`
+	IsActive         bool      `json:"is_active"`
+}
+
+type MeterWithoutService []ClientMeter
+
+func (m *MeterWithoutService) Add(clientMeter ClientMeter) {
+	*m = append(*m, clientMeter)
+}

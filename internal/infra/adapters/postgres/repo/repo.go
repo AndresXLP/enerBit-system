@@ -154,3 +154,18 @@ func (repo meter) DeleteMeterByID(ctx context.Context, ID uuid.UUID) error {
 
 	return nil
 }
+
+func (repo meter) GetInactiveServiceMeters(ctx context.Context) (model.ClientWithoutService, error) {
+	clientMeter := model.ClientWithoutService{}
+	err := repo.db.WithContext(ctx).
+		Table(tableClients + " as c").
+		Select("c.address, c.installation_date, m.brand,m.serial").
+		Where("c.is_active = FALSE").
+		Joins("left join meters as m on c.meter_id = m.id").
+		Scan(&clientMeter).Error
+	if err != nil {
+		return model.ClientWithoutService{}, err
+	}
+
+	return clientMeter, nil
+}

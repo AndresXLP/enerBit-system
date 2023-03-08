@@ -21,4 +21,5 @@ func (group meter) Resource(c *echo.Group) {
 	groupPath := c.Group("/meter")
 	groupPath.POST("", group.meterHandler.RegisterNewMeter)
 	groupPath.DELETE("/:id", group.meterHandler.DeleteMeter)
+	groupPath.GET("/inactive", group.meterHandler.GetInactiveServiceMeters)
 }

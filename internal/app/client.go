@@ -62,7 +62,7 @@ func (app *client) NewInstallation(ctx context.Context, request dto.NewInstallat
 		},
 		Client: model.Client{
 			Address:          request.Address,
-			IsActive:         request.IsActive,
+			IsActive:         *request.IsActive,
 			InstallationDate: request.InstallationDate,
 			MeterID:          meterDB.ID,
 			RetirementDate:   nil,

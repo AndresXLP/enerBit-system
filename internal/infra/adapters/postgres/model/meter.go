@@ -48,3 +48,25 @@ func (m *NewInstallation) GenerateMessageInstallation() string {
 		m.IsActive,
 	)
 }
+
+func (m *NewInstallation) ToDomainDTOSingle() dto.ClientMeter {
+	return dto.ClientMeter{
+		Address:          m.Address,
+		InstallationDate: m.InstallationDate,
+		Brand:            m.Brand,
+		Serial:           m.Serial,
+		IsActive:         m.IsActive,
+	}
+}
+
+type ClientWithoutService []NewInstallation
+
+func (c ClientWithoutService) ToDomainDTOSlice() dto.MeterWithoutService {
+	var meterWithoutService dto.MeterWithoutService
+
+	for _, item := range c {
+		meterWithoutService.Add(item.ToDomainDTOSingle())
+	}
+
+	return meterWithoutService
+}
