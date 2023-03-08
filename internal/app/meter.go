@@ -7,12 +7,15 @@ import (
 	"enerBit-system/internal/domain/dto"
 	"enerBit-system/internal/domain/ports/postgres/repo"
 	"enerBit-system/internal/infra/adapters/postgres/model"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type Meter interface {
 	RegisterNewMeter(ctx context.Context, request dto.Meter) error
 	GetMeterByBrandAndSerial(ctx context.Context, brand, serial string) (model.Meter, error)
+	GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error)
+	DeleterMeter(ctx context.Context, ID uuid.UUID) error
 }
 
 type meter struct {
@@ -50,4 +53,34 @@ func (app *meter) GetMeterByBrandAndSerial(ctx context.Context, brand, serial st
 	}
 
 	return existingMeter, nil
+}
+
+func (app *meter) GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error) {
+	meterDB, err := app.repo.GetMeterByID(ctx, ID)
+	if err != nil {
+		return model.Meter{}, echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	if meterDB.ID.ID() == 0 {
+		return model.Meter{}, echo.NewHTTPError(http.StatusBadRequest, "this meter does not exist")
+	}
+
+	return meterDB, nil
+}
+
+func (app *meter) DeleterMeter(ctx context.Context, ID uuid.UUID) error {
+	meterDB, err := app.GetMeterByID(ctx, ID)
+	if err != nil {
+		return err
+	}
+
+	if meterDB.InUse {
+		return echo.NewHTTPError(http.StatusConflict, "this meter is currently begin used")
+	}
+
+	if err = app.repo.DeleteMeterByID(ctx, ID); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return nil
 }

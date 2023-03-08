@@ -7,6 +7,7 @@ import (
 	"enerBit-system/internal/domain/ports/postgres/repo"
 	redis "enerBit-system/internal/domain/ports/redis/repo"
 	"enerBit-system/internal/infra/adapters/postgres/model"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -122,6 +123,31 @@ func (repo meter) UninstallMeter(ctx context.Context, property model.Client) err
 		return nil
 	})
 
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repo meter) GetMeterByID(ctx context.Context, ID uuid.UUID) (model.Meter, error) {
+	meterDB := model.Meter{}
+	err := repo.db.WithContext(ctx).
+		Table(tableMeters).
+		Where("id = ?", ID).
+		Scan(&meterDB).Error
+	if err != nil {
+		return model.Meter{}, err
+	}
+
+	return meterDB, nil
+}
+
+func (repo meter) DeleteMeterByID(ctx context.Context, ID uuid.UUID) error {
+	err := repo.db.WithContext(ctx).
+		Table(tableMeters).
+		Delete(model.Meter{}, "id=?", ID).
+		Error
 	if err != nil {
 		return err
 	}
