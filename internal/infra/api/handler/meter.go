@@ -5,6 +5,7 @@ import (
 
 	"enerBit-system/internal/app"
 	"enerBit-system/internal/domain/dto"
+	"github.com/andresxlp/gosuite/errs"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -47,7 +48,11 @@ func (handler *meter) RegisterNewMeter(cntx echo.Context) error {
 	}
 
 	if err := handler.app.RegisterNewMeter(ctx, request); err != nil {
-		return err
+		httpErr, ok := err.(*errs.AppError)
+		if ok {
+			return httpErr.NewEchoHttpError()
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return cntx.JSON(http.StatusOK, request)

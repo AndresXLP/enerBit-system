@@ -5,6 +5,7 @@ import (
 
 	"enerBit-system/internal/app"
 	"enerBit-system/internal/domain/dto"
+	"github.com/andresxlp/gosuite/errs"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,7 +43,10 @@ func (handler *client) NewInstallation(cntx echo.Context) error {
 	}
 
 	if err := handler.app.NewInstallation(ctx, request); err != nil {
-		return err
+		if httpErr, ok := err.(*errs.AppError); ok {
+			return httpErr.NewEchoHttpError()
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
 	return cntx.JSON(http.StatusOK, request)
@@ -70,7 +74,10 @@ func (handler *client) UninstallMeter(cntx echo.Context) error {
 	}
 
 	if err := handler.app.UninstallMeter(ctx, request); err != nil {
-		return err
+		if httpErr, ok := err.(*errs.AppError); ok {
+			return httpErr.NewEchoHttpError()
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return cntx.JSON(http.StatusOK, "Meter uninstalled successfully")
 }

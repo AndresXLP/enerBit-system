@@ -3,6 +3,7 @@ module enerBit-system
 go 1.20
 
 require (
+	github.com/andresxlp/gosuite v0.0.3-alpha
 	github.com/go-playground/mold/v4 v4.3.0
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/gomodule/redigo v1.8.9
@@ -11,7 +12,9 @@ require (
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/labstack/gommon v0.4.0
 	github.com/swaggo/echo-swagger v1.3.5
+	github.com/swaggo/swag v1.8.1
 	go.uber.org/dig v1.16.1
+	google.golang.org/grpc v1.53.0
 	gorm.io/driver/postgres v1.4.8
 	gorm.io/gorm v1.24.6
 )
@@ -27,6 +30,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.3.0 // indirect
@@ -40,7 +44,6 @@ require (
 	github.com/segmentio/go-camelcase v0.0.0-20160726192923-7085f1e3c734 // indirect
 	github.com/segmentio/go-snakecase v1.2.0 // indirect
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
-	github.com/swaggo/swag v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
@@ -49,5 +52,7 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
+	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

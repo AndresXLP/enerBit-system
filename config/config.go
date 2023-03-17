@@ -8,15 +8,18 @@ import (
 )
 
 type Config struct {
-	ServerHost string `required:"true" split_words:"true"`
-	ServerPort int    `required:"true" split_words:"true"`
-	DbHost     string `required:"true" split_words:"true"`
-	DbPort     int    `required:"true" split_words:"true"`
-	DbUser     string `required:"true" split_words:"true"`
-	DbPassword string `required:"true" split_words:"true"`
-	DbName     string `required:"true" split_words:"true"`
-	RedisHost  string `required:"true" split_words:"true"`
-	RedisPort  int    `required:"true" split_words:"true"`
+	ServerHost   string `required:"true" split_words:"true"`
+	ServerPort   int    `required:"true" split_words:"true"`
+	GrpcProtocol string `required:"true" split_words:"true"`
+	GrpcHost     string `required:"true" split_words:"true"`
+	GrpcPort     int    `required:"true" split_words:"true"`
+	DbHost       string `required:"true" split_words:"true"`
+	DbPort       int    `required:"true" split_words:"true"`
+	DbUser       string `required:"true" split_words:"true"`
+	DbPassword   string `required:"true" split_words:"true"`
+	DbName       string `required:"true" split_words:"true"`
+	RedisHost    string `required:"true" split_words:"true"`
+	RedisPort    int    `required:"true" split_words:"true"`
 }
 
 var (

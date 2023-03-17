@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package="internal/infra/grpc/service";
+
+package proto;
+
+message Meter {
+  string brand = 1;
+  string serial = 2;
+  int32 lines = 3;
+}
+
+message CreateMeterReq {
+  Meter meter = 1;
+}
+
+message CreateMeterResp {
+  string meterId = 1;
+}
+
+message ListMeterReq {
+  string meterId = 1;
+}
+
+service MeterService {
+  rpc Create(CreateMeterReq) returns (CreateMeterResp);
+}

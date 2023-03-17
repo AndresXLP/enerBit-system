@@ -7,6 +7,8 @@ import (
 	"enerBit-system/internal/infra/api/handler"
 	"enerBit-system/internal/infra/api/router"
 	"enerBit-system/internal/infra/api/router/groups"
+	grpcHandler "enerBit-system/internal/infra/grpc/handler"
+	"enerBit-system/internal/infra/grpc/server"
 	"enerBit-system/internal/infra/resource/postgres"
 	"enerBit-system/internal/infra/resource/redis"
 	"github.com/labstack/echo/v4"
@@ -21,6 +23,10 @@ func BuildContainer() *dig.Container {
 	_ = Container.Provide(func() *echo.Echo {
 		return echo.New()
 	})
+
+	_ = Container.Provide(server.NewGrpcServer)
+
+	_ = Container.Provide(grpcHandler.NewMeterServer)
 
 	_ = Container.Provide(redis.NewRedisConnection)
 
