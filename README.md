@@ -13,9 +13,10 @@ $ git clone https://github.com/AndresXLP/enerBit-system.git
 
 # Technology Stack
 
-- Framework: [echo](https://echo.labstack.com/)
-- Validations: [validator](https://github.com/go-playground/validator)
-- GORM: [GORM](https://gorm.io/)
+- [echo](https://echo.labstack.com/)
+- [validator](https://github.com/go-playground/validator)
+- [GORM](https://gorm.io/)
+- [gRPC](https://grpc.io/docs/languages/go/quickstart/)
 
 # Architecture
 
@@ -59,6 +60,9 @@ $ make compose-up
 * `DB_PORT`: port database
 * `REDIS_HOST`: host redis
 * `REDIS_PORT`: port redis
+* `GRPC_PROTOCOL`: protocol for gRPC server
+* `GRPC_HOST`: host for gRPC server
+* `GRPC_PORT`: port for gRPC server
 
 
 # Contributors
